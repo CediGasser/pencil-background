@@ -1,0 +1,14 @@
+:root {
+    --dark-bg: rgba(15, 15, 15, 0.95);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#three-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+}

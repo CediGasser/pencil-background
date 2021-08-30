@@ -1,4 +1,6 @@
 import { LitElement, html, customElement, property, css } from 'lit-element'
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 /**
  * An example element.
@@ -6,16 +8,49 @@ import { LitElement, html, customElement, property, css } from 'lit-element'
  * @slot - This element has a slot
  * @csspart button - The button
  */
-@customElement('my-element')
-export class MyElement extends LitElement {
+@customElement('pencil-background')
+export class PencilBackground extends LitElement {
   static styles = css`
     :host {
-      display: block;
+      position: absolute;
+      width: 100%;
       border: solid 1px gray;
       padding: 16px;
-      max-width: 800px;
     }
   `
+
+  private scene
+  private camera
+  private renderer
+
+  constructor() {
+    super()
+    this.scene = new THREE.Scene()
+
+    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1000)
+    this.camera.position.z = 30
+
+    this.renderer = new THREE.WebGLRenderer()
+    this.renderer.setPixelRatio(window.devicePixelRatio)
+    this.renderer.setSize(window.innerWidth, window.innerHeight)
+
+    const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+    const material = new THREE.MeshStandardMaterial({ color: 0xff6347 });
+    const torus = new THREE.Mesh(geometry, material);
+    this.scene.add(torus);
+
+    const pointLight = new THREE.PointLight(0xffffff);
+    pointLight.position.set(-5, 5, 5);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff);
+    this.scene.add(pointLight, ambientLight);
+  }
+
+  firstUpdated() {
+    let canvas = this.shadowRoot?.getElementById('threeCanvas')
+    canvas?.appendChild(this.renderer.domElement)
+    this._animate()
+  }
 
   /**
    * The name to say "Hello" to.
@@ -29,27 +64,20 @@ export class MyElement extends LitElement {
   @property({ type: Number })
   count = 0
 
+  private _animate() {
+    this.renderer.render(this.scene, this.camera)
+    requestAnimationFrame(this._animate);
+  }
+
   render() {
     return html`
-      <h1>Hello, ${this.name}!</h1>
-      <button @click=${this._onClick} part="button">
-        Click Count: ${this.count}
-      </button>
-      <slot></slot>
+      <canvas id="threeCanvas"></canvas>
     `
-  }
-
-  private _onClick() {
-    this.count++
-  }
-
-  foo(): string {
-    return 'foo'
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'my-element': MyElement
+    'pencil-background': PencilBackground
   }
 }
