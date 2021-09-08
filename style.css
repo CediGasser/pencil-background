@@ -1,3 +1,32 @@
-:root {
-    --dark-bg: rgba(15, 15, 15, 0.95);
+* {
+    font-family: 'Nunito', 'Sans-serif';
+}
+
+body {
+    background-color: black;
+    overflow-x: hidden;
+}
+
+main {
+    position: absolute;
+    z-index: 1;
+    color: white;
+    width: 100%;
+    display: grid;
+    justify-items: center;
+    padding-top: 20vh;
+    padding-bottom: 20vh;
+}
+
+div {
+    width: 800px;
+    margin: 200px;
+}
+
+h1 {
+    font-size: 4rem;
+}
+
+p {
+    font-size: 1.2rem;
 }

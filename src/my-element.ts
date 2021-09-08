@@ -1,13 +1,8 @@
-import { LitElement, html, customElement, property, css } from 'lit-element'
+import { LitElement, html, customElement, css } from 'lit-element'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { Lensflare, LensflareElement } from './Lensflare.js'
-
-enum theme{
-  dark,
-  light
-}
 
 /**
  * The background element with the pencil
@@ -22,8 +17,7 @@ export class PencilBackground extends LitElement {
       position: fixed;
       top: 0;
       left: 0;
-      margin: 0;
-      padding: 0;
+      outline: none;
     }
   `
 
@@ -31,12 +25,12 @@ export class PencilBackground extends LitElement {
   private camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
   private renderer = new THREE.WebGLRenderer()
   private controls = new OrbitControls(this.camera, this.renderer.domElement);
-  public pencil: any
+  private pencil: any
 
   constructor() {
     super()
-    console.log('in ctor')
 
+    // Renderer
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.outputEncoding = THREE.sRGBEncoding;
@@ -48,10 +42,6 @@ export class PencilBackground extends LitElement {
     this.camera.position.set(0, 0, 15)
 
     // Objects
-    // const material = new THREE.MeshStandardMaterial({ color: 0xff2222 })
-    // const centerDot = new THREE.Mesh(new THREE.SphereGeometry(4, 16, 16), material)
-    // scene.add(centerDot)
-
     const loader = new GLTFLoader();
     loader.load( './src/assets/Pencil3.glb', gltf => {
       gltf.scene.traverse((o) => {
@@ -73,9 +63,6 @@ export class PencilBackground extends LitElement {
     })
 
     // Helpers
-    // const helper = new THREE.CameraHelper( directionalLight.shadow.camera );
-    // scene.add( helper );
-
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
 
     // Adding the Point Lights
@@ -117,12 +104,6 @@ export class PencilBackground extends LitElement {
     canvas?.appendChild(this.renderer.domElement)
     this._animate(this.now)
   }
-
-  /**
-   * The theme which decieds the color n' stuff
-   */
-  @property({ type: theme })
-  theme = theme.dark
 
   private moveStuff = (t: number) => {
     if (this.pencil) {
